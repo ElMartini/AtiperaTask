@@ -1,8 +1,5 @@
 package com.atipera.service;
 
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -14,10 +11,16 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class GitHubService {
-    public static void run() throws URISyntaxException, IOException, InterruptedException {
+
+    public static void showReposAndBranches(String user) throws URISyntaxException, IOException, InterruptedException {
+
+        String token = System.getenv("GITHUB_TOKEN");
+        String tokenHeader = "Bearer "+token;
+        String userURI = "https://api.github.com/users/"+user+"/repos";
 
         HttpRequest getRequest = HttpRequest.newBuilder()
-                .uri(new URI("https://api.github.com/users/ElMartini/repos"))
+                .uri(new URI(userURI))
+                .header("Authorization", tokenHeader)
                 .GET()
                 .build();
 
@@ -29,11 +32,18 @@ public class GitHubService {
         JSONArray jsonArray = new JSONArray(responseBody);
 
         for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject repo = jsonArray.getJSONObject(i);
-            JSONObject owner = repo.getJSONObject("owner");
-            System.out.printf("Repository: %-20s Owner: %s%n",repo.getString("name"),owner.getString("login"));
+            JSONObject repository = jsonArray.getJSONObject(i);
+            JSONObject owner = repository.getJSONObject("owner");
+            if(!checkIfFork(repository))
+                System.out.printf("Repository: %-20s Owner: %s%n", repository.getString("name"), owner.getString("login"));
         }
 
 
+
+
+    }
+
+    private static boolean checkIfFork(JSONObject repository) {
+        return repository.getBoolean("fork");
     }
 }
