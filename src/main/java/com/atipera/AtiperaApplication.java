@@ -12,7 +12,6 @@ public class AtiperaApplication {
 
 	public static void main(String[] args) throws URISyntaxException, IOException, InterruptedException {
 		SpringApplication.run(AtiperaApplication.class, args);
-		GitHubController.runController();
 	}
 
 }
