@@ -25,12 +25,22 @@ public class GitHubService {
     }
 
     private void showRepositories(JSONArray jsonResponseBody, String user) throws URISyntaxException, IOException, InterruptedException {
-        for (int i = 0; i < jsonResponseBody.length(); i++) {
-            JSONObject repository = jsonResponseBody.getJSONObject(i);
-            JSONObject owner = repository.getJSONObject("owner");
-            if (!checkIfFork(repository)) {
-                System.out.printf("Repository: %-20s Owner: %s%n", repository.getString("name"), owner.getString("login"));
-                showBranches(user, repository.getString("name"));
+
+        if (jsonResponseBody.length()==0) {
+            System.out.println("User has none public repositories");
+        } else {
+            for (int i = 0; i < jsonResponseBody.length(); i++) {
+                JSONObject repository = jsonResponseBody.getJSONObject(i);
+                JSONObject owner = repository.getJSONObject("owner");
+                if (!checkIfFork(repository)) {
+                    System.out.printf("Repository: %-20s Owner: %s%n", repository.getString("name"), owner.getString("login"));
+
+                    showBranches(user, repository.getString("name"));
+                } else {
+                    System.out.println("Repository: None Owner: None");
+                    System.out.println("Branch: None SHA: None");
+                    System.out.println("This user has no public repository that isn't fork");
+                }
             }
         }
     }
@@ -54,7 +64,7 @@ public class GitHubService {
 
     }
 
-    private HttpResponse<String> createHttpRequest(String URI) throws URISyntaxException, IOException, InterruptedException {
+    public HttpResponse<String> createHttpRequest(String URI) throws URISyntaxException, IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(new URI(URI))
                 .GET()
@@ -70,7 +80,7 @@ public class GitHubService {
             return true;
         } else {
             String json = String.format(
-                    "{\n    \"status\": %d,\n    \"message\": \"%s\"\n}",
+                    "{\n\"status\": %d,\n\"message\": \"%s\"\n}",
                     response.statusCode(),
                     new JSONObject(response.body()).getString("message")
             );
