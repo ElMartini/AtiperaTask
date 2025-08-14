@@ -26,7 +26,7 @@ You can run it using:
 ```
 java -jar Atipera-0.0.1-SNAPSHOT.jar
 ```
-where u use jar name that are correct with this created. Remeber, you have to be in /target directory
+where you use jar name that are correct with this created. Remeber, you have to be in /target directory
 
 
 ## Authors
