@@ -46,7 +46,7 @@ public class GithubService {
     private List<RepositoryDTO> processResponse(JSONArray jsonResponseBody, String user) throws URISyntaxException, IOException, InterruptedException {
 
         List<RepositoryDTO> repositoryDTOList = new ArrayList<>();
-        if (jsonResponseBody.isEmpty()) {
+        if (jsonResponseBody.length()==0) {
             return repositoryDTOList;
         } else {
 

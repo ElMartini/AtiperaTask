@@ -37,7 +37,7 @@ class AtiperaApplicationTests {
         boolean responseCode = (response.statusCode() == 200);
         if (responseCode) {
             JSONArray body = new JSONArray(response.body());
-            isEmpty = body.isEmpty();
+            isEmpty = body.length()==0;
         }
         System.setIn(new ByteArrayInputStream(user.getBytes()));
 
